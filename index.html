@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>A Message for Sabahat</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,17 +18,19 @@
       background: #fff5f8;
       font-family: 'Inter', sans-serif;
       overflow: hidden;
-      touch-action: manipulation;
+      /* Prevent pull-to-refresh and bouncing on mobile */
+      overscroll-behavior: none;
+      height: 100vh;
+      width: 100vw;
     }
 
-    .cursive {
-      font-family: 'Dancing Script', cursive;
-    }
+    .cursive { font-family: 'Dancing Script', cursive; }
 
     .glass {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
     }
 
     .floating {
@@ -37,41 +39,34 @@
 
     @keyframes floating {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
+      50% { transform: translateY(-12px); }
     }
 
     #noBtn {
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: left 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                  top 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .heart-bg {
-      position: absolute;
-      z-index: -1;
-      opacity: 0.1;
-      pointer-events: none;
-    }
-
-    /* Pulse effect for Yes button */
+    /* Soft pulse for the Yes button to draw focus */
     @keyframes pulse-soft {
-      0% { box-shadow: 0 0 0 0 rgba(255, 77, 125, 0.4); }
-      70% { box-shadow: 0 0 0 20px rgba(255, 77, 125, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(255, 77, 125, 0.5); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 77, 125, 0); }
       100% { box-shadow: 0 0 0 0 rgba(255, 77, 125, 0); }
     }
     .pulse { animation: pulse-soft 2s infinite; }
   </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center p-4">
 
   <canvas id="confetti" class="fixed inset-0 pointer-events-none z-50"></canvas>
 
-  <!-- Interactive Card -->
-  <main id="card" class="glass max-w-md w-full rounded-[32px] p-8 text-center shadow-2xl relative z-10">
+  <main id="card" class="glass w-full max-w-[340px] sm:max-w-md rounded-[40px] p-6 sm:p-10 text-center shadow-2xl relative z-10 transition-all duration-500">
     
-    <div id="setup-view">
-      <div class="mb-6 floating">
-        <svg class="w-32 h-32 mx-auto" viewBox="0 0 200 200">
+    <div id="setup-view" class="flex flex-col items-center">
+      <div class="mb-4 sm:mb-6 floating">
+        <svg class="w-24 h-24 sm:w-32 sm:h-32" viewBox="0 0 200 200">
             <path fill="#ff4d7d" d="M100 170c-5-5-60-45-60-85 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-55 80-60 85z">
-                <animate attributeName="d" dur="2s" repeatCount="indefinite" 
+                <animate attributeName="d" dur="2.5s" repeatCount="indefinite" 
                     values="M100 170c-5-5-60-45-60-85 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-55 80-60 85z;
                             M100 175c-5-5-65-50-65-90 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-60 85-65 90z;
                             M100 170c-5-5-60-45-60-85 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-55 80-60 85z" />
@@ -79,41 +74,41 @@
         </svg>
       </div>
 
-      <h1 class="text-3xl font-extrabold text-gray-800 mb-2">Sabahat,</h1>
-      <p class="text-xl text-gray-600 mb-8 cursive">Will you be my Valentine?</p>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-1">Hey Sabahat,</h1>
+      <p class="text-xl sm:text-2xl text-gray-600 mb-8 cursive">Will you be my Valentine?</p>
 
-      <div class="relative h-48 w-full" id="button-area">
-        <button id="yesBtn" class="pulse absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#ff4d7d] hover:bg-[#ff1f68] text-white px-8 py-4 rounded-full font-bold text-xl shadow-lg transition-all duration-300 z-20">
+      <!-- Fixed height area for button chaos -->
+      <div class="relative h-64 w-full bg-white/30 rounded-3xl border border-dashed border-pink-200" id="button-area">
+        <button id="yesBtn" class="pulse absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#ff4d7d] active:scale-95 text-white px-8 py-4 rounded-full font-bold text-xl shadow-lg transition-transform duration-200 z-20 whitespace-nowrap">
           Yes!
         </button>
-        <button id="noBtn" class="absolute left-1/2 top-1/2 translate-x-12 -translate-y-1/2 bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold z-10">
+        <button id="noBtn" class="absolute left-1/2 top-1/2 translate-x-12 -translate-y-1/2 bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold z-10 touch-none">
           No
         </button>
       </div>
       
-      <p id="hint" class="text-sm text-gray-400 mt-4 italic opacity-0 transition-opacity duration-500">
-        Resistance is futile...
+      <p id="hint" class="text-xs sm:text-sm text-pink-400 mt-4 italic font-medium opacity-0 transition-opacity duration-500">
+        The "No" button seems broken... try the other one? 😉
       </p>
     </div>
 
     <!-- Success View -->
-    <div id="success-view" class="hidden">
-      <div class="text-6xl mb-6">💖</div>
-      <h2 class="text-4xl font-extrabold text-[#ff4d7d] mb-4">I knew it!</h2>
-      <p class="text-lg text-gray-600 cursive">See you ver soon my wife, Sabahat</p>
-      <div class="mt-8 space-y-2">
-          <div class="h-1 w-full bg-pink-100 rounded-full overflow-hidden">
-              <div class="h-full bg-pink-500 animate-[progress_2s_ease-in-out]"></div>
+    <div id="success-view" class="hidden animate-[in_0.5s_ease-out]">
+      <div class="text-6xl mb-4">💖</div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-[#ff4d7d] mb-4">Excellent Choice.</h2>
+      <p class="text-lg sm:text-xl text-gray-600 cursive px-4">Get ready for the best Valentine's Day yet, Sabahat.</p>
+      <div class="mt-10 px-6">
+          <div class="h-1.5 w-full bg-pink-100 rounded-full overflow-hidden">
+              <div class="h-full bg-pink-500 origin-left animate-[progress_2.5s_ease-in-out_forwards]"></div>
           </div>
+          <p class="text-[10px] uppercase tracking-widest text-gray-400 mt-2 font-bold">Booking Date... 100%</p>
       </div>
     </div>
   </main>
 
   <style>
-      @keyframes progress {
-          from { width: 0%; }
-          to { width: 100%; }
-      }
+      @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+      @keyframes in { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
   </style>
 
   <script>
@@ -127,17 +122,18 @@
     let scale = 1;
     let noInteractions = 0;
 
-    const moveNo = () => {
+    const moveNo = (e) => {
+      if (e) e.preventDefault();
       noInteractions++;
       
-      // Calculate random position within the card bounds
-      const padding = 20;
       const area = buttonArea.getBoundingClientRect();
       const btn = noBtn.getBoundingClientRect();
       
-      const maxX = area.width - btn.width - padding;
-      const maxY = area.height - btn.height - padding;
+      // Calculate max bounds relative to the buttonArea
+      const maxX = area.width - btn.width;
+      const maxY = area.height - btn.height;
       
+      // Ensure the button jumps a significant distance each time
       const newX = Math.random() * maxX;
       const newY = Math.random() * maxY;
 
@@ -145,19 +141,26 @@
       noBtn.style.top = `${newY}px`;
       noBtn.style.transform = 'none';
 
-      // Make the Yes button grow
-      scale += 0.15;
-      yesBtn.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      // Aggressive growth for the Yes button
+      scale += 0.2;
+      // Clamp the scale so it doesn't cover the entire screen and break the container
+      const clampedScale = Math.min(scale, 2.5);
+      yesBtn.style.transform = `translate(-50%, -50%) scale(${clampedScale})`;
       
-      if (noInteractions > 3) {
-        hint.classList.remove('opacity-0');
+      if (noInteractions > 2) {
+        hint.classList.replace('opacity-0', 'opacity-100');
       }
     };
 
-    // Desktop
+    // Interaction Listeners
     noBtn.addEventListener('mouseover', moveNo);
+    noBtn.addEventListener('touchstart', (e) => {
+      moveNo(e);
+      // Feedback for mobile
+      if (window.navigator.vibrate) window.navigator.vibrate(10);
+    });
     
-    // Mobile - clicking "No" moves it
+    // Safety fallback
     noBtn.addEventListener('click', (e) => {
       e.preventDefault();
       moveNo();
@@ -167,23 +170,23 @@
       setupView.classList.add('hidden');
       successView.classList.remove('hidden');
       
-      const duration = 5 * 1000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+      // Multi-stage confetti for premium feel
+      const count = 200;
+      const defaults = { origin: { y: 0.7 }, zIndex: 1000 };
 
-      const randomInRange = (min, max) => Math.random() * (max - min) + min;
+      function fire(particleRatio, opts) {
+        confetti({
+          ...defaults,
+          ...opts,
+          particleCount: Math.floor(count * particleRatio)
+        });
+      }
 
-      const interval = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
-
-        const particleCount = 50 * (timeLeft / duration);
-        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-      }, 250);
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
     });
   </script>
 </body>
