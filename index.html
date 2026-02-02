@@ -8,68 +8,30 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;800&display=swap');
-
-    :root {
-      --primary: #ff4d7d;
-      --secondary: #ff1f68;
-    }
-
-    body {
-      background: #fff5f8;
-      font-family: 'Inter', sans-serif;
-      overflow: hidden;
-      /* Prevent pull-to-refresh and bouncing on mobile */
-      overscroll-behavior: none;
-      height: 100vh;
-      width: 100vw;
-    }
-
+    :root { --primary: #ff4d7d; --secondary: #ff1f68; }
+    body { background: #fff5f8; font-family: 'Inter', sans-serif; overflow: hidden; overscroll-behavior: none; height: 100vh; width: 100vw; }
     .cursive { font-family: 'Dancing Script', cursive; }
-
-    .glass {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-    }
-
-    .floating {
-      animation: floating 3s ease-in-out infinite;
-    }
-
-    @keyframes floating {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-
-    #noBtn {
-      transition: left 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                  top 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    /* Soft pulse for the Yes button to draw focus */
-    @keyframes pulse-soft {
-      0% { box-shadow: 0 0 0 0 rgba(255, 77, 125, 0.5); }
-      70% { box-shadow: 0 0 0 15px rgba(255, 77, 125, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 77, 125, 0); }
-    }
+    .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.4); }
+    .floating { animation: floating 3s ease-in-out infinite; }
+    @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    
+    /* Z-Index Logic: No Button (40) > Yes Button (30) to prevent overlapping lock-out */
+    #noBtn { transition: left 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 40; }
+    #yesBtn { z-index: 30; transition: transform 0.2s ease-out; }
+    
+    @keyframes pulse-soft { 0% { box-shadow: 0 0 0 0 rgba(255, 77, 125, 0.5); } 70% { box-shadow: 0 0 0 15px rgba(255, 77, 125, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 77, 125, 0); } }
     .pulse { animation: pulse-soft 2s infinite; }
   </style>
 </head>
 <body class="flex items-center justify-center p-4">
-
   <canvas id="confetti" class="fixed inset-0 pointer-events-none z-50"></canvas>
 
-  <main id="card" class="glass w-full max-w-[340px] sm:max-w-md rounded-[40px] p-6 sm:p-10 text-center shadow-2xl relative z-10 transition-all duration-500">
-    
+  <main id="card" class="glass w-full max-w-[340px] sm:max-w-md rounded-[40px] p-6 sm:p-10 text-center shadow-2xl relative z-10">
     <div id="setup-view" class="flex flex-col items-center">
       <div class="mb-4 sm:mb-6 floating">
         <svg class="w-24 h-24 sm:w-32 sm:h-32" viewBox="0 0 200 200">
             <path fill="#ff4d7d" d="M100 170c-5-5-60-45-60-85 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-55 80-60 85z">
-                <animate attributeName="d" dur="2.5s" repeatCount="indefinite" 
-                    values="M100 170c-5-5-60-45-60-85 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-55 80-60 85z;
-                            M100 175c-5-5-65-50-65-90 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-60 85-65 90z;
-                            M100 170c-5-5-60-45-60-85 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-55 80-60 85z" />
+                <animate attributeName="d" dur="2.5s" repeatCount="indefinite" values="M100 170c-5-5-60-45-60-85 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-55 80-60 85z;M100 175c-5-5-65-50-65-90 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-60 85-65 90z;M100 170c-5-5-60-45-60-85 0-25 20-40 40-40 10 0 15 5 20 10 5-5 10-10 20-10 20 0 40 15 40 40 0 40-55 80-60 85z" />
             </path>
         </svg>
       </div>
@@ -77,37 +39,28 @@
       <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-1">Hey Sabahat,</h1>
       <p class="text-xl sm:text-2xl text-gray-600 mb-8 cursive">Will you be my Valentine?</p>
 
-      <!-- Fixed height area for button chaos -->
       <div class="relative h-64 w-full bg-white/30 rounded-3xl border border-dashed border-pink-200" id="button-area">
-        <button id="yesBtn" class="pulse absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#ff4d7d] active:scale-95 text-white px-8 py-4 rounded-full font-bold text-xl shadow-lg transition-transform duration-200 z-20 whitespace-nowrap">
+        <button id="yesBtn" class="pulse absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#ff4d7d] text-white px-8 py-4 rounded-full font-bold text-xl shadow-lg whitespace-nowrap">
           Yes!
         </button>
-        <button id="noBtn" class="absolute left-1/2 top-1/2 translate-x-12 -translate-y-1/2 bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold z-10 touch-none">
+        <button id="noBtn" class="absolute left-1/2 top-1/2 translate-x-12 -translate-y-1/2 bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold touch-none">
           No
         </button>
       </div>
       
       <p id="hint" class="text-xs sm:text-sm text-pink-400 mt-4 italic font-medium opacity-0 transition-opacity duration-500">
-        The "No" button seems broken... try the other one? 😉
+        Resistance is futile, Sabahat... 😉
       </p>
     </div>
 
-    <!-- Success View -->
     <div id="success-view" class="hidden animate-[in_0.5s_ease-out]">
       <div class="text-6xl mb-4">💖</div>
       <h2 class="text-3xl sm:text-4xl font-extrabold text-[#ff4d7d] mb-4">Excellent Choice.</h2>
-      <p class="text-lg sm:text-xl text-gray-600 cursive px-4">Get ready for the best Valentine's Day yet, Sabahat.</p>
-      <div class="mt-10 px-6">
-          <div class="h-1.5 w-full bg-pink-100 rounded-full overflow-hidden">
-              <div class="h-full bg-pink-500 origin-left animate-[progress_2.5s_ease-in-out_forwards]"></div>
-          </div>
-          <p class="text-[10px] uppercase tracking-widest text-gray-400 mt-2 font-bold">Booking Date... 100%</p>
-      </div>
+      <p class="text-lg sm:text-xl text-gray-600 cursive px-4">See you on the very soon my love 💖.</p>
     </div>
   </main>
 
   <style>
-      @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
       @keyframes in { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
   </style>
 
@@ -127,66 +80,59 @@
       noInteractions++;
       
       const area = buttonArea.getBoundingClientRect();
-      const btn = noBtn.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
       
-      // Calculate max bounds relative to the buttonArea
-      const maxX = area.width - btn.width;
-      const maxY = area.height - btn.height;
-      
-      // Ensure the button jumps a significant distance each time
-      const newX = Math.random() * maxX;
-      const newY = Math.random() * maxY;
+      // LOGIC UPGRADE: Calculated Evasion
+      // Find the center of the button relative to the area
+      const currentX = noBtn.offsetLeft;
+      const currentY = noBtn.offsetTop;
+
+      let newX, newY;
+      let distance = 0;
+      let attempts = 0;
+
+      // Ensure the new position is at least 100px away from the current pointer/touch
+      // and within the container bounds
+      do {
+        newX = Math.random() * (area.width - btnRect.width);
+        newY = Math.random() * (area.height - btnRect.height);
+        
+        // If it's a touch/mouse event, calculate distance from the pointer
+        if (e && (e.clientX || (e.touches && e.touches[0]))) {
+          const px = e.clientX || e.touches[0].clientX;
+          const py = e.clientY || e.touches[0].clientY;
+          distance = Math.hypot(newX + area.left - px, newY + area.top - py);
+        } else {
+          distance = 101; // Fallback
+        }
+        attempts++;
+      } while (distance < 100 && attempts < 20);
 
       noBtn.style.left = `${newX}px`;
       noBtn.style.top = `${newY}px`;
       noBtn.style.transform = 'none';
 
-      // Aggressive growth for the Yes button
-      scale += 0.2;
-      // Clamp the scale so it doesn't cover the entire screen and break the container
+      scale += 0.25;
       const clampedScale = Math.min(scale, 2.5);
       yesBtn.style.transform = `translate(-50%, -50%) scale(${clampedScale})`;
       
-      if (noInteractions > 2) {
-        hint.classList.replace('opacity-0', 'opacity-100');
-      }
+      if (noInteractions > 2) hint.style.opacity = "1";
     };
 
-    // Interaction Listeners
     noBtn.addEventListener('mouseover', moveNo);
-    noBtn.addEventListener('touchstart', (e) => {
-      moveNo(e);
-      // Feedback for mobile
-      if (window.navigator.vibrate) window.navigator.vibrate(10);
-    });
-    
-    // Safety fallback
-    noBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      moveNo();
-    });
+    noBtn.addEventListener('touchstart', moveNo);
+    noBtn.addEventListener('click', (e) => { e.preventDefault(); moveNo(); });
 
     yesBtn.addEventListener('click', () => {
       setupView.classList.add('hidden');
       successView.classList.remove('hidden');
-      
-      // Multi-stage confetti for premium feel
       const count = 200;
       const defaults = { origin: { y: 0.7 }, zIndex: 1000 };
-
-      function fire(particleRatio, opts) {
-        confetti({
-          ...defaults,
-          ...opts,
-          particleCount: Math.floor(count * particleRatio)
-        });
-      }
-
+      const fire = (ratio, opts) => confetti({ ...defaults, ...opts, particleCount: Math.floor(count * ratio) });
       fire(0.25, { spread: 26, startVelocity: 55 });
       fire(0.2, { spread: 60 });
       fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
       fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-      fire(0.1, { spread: 120, startVelocity: 45 });
     });
   </script>
 </body>
